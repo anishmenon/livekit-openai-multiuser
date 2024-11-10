@@ -484,6 +484,7 @@ class LLM(llm.LLM):
         *,
         chat_ctx: llm.ChatContext,
         user_id: str | None = None,
+        user_transcript: str | None = None,
         fnc_ctx: llm.FunctionContext | None = None,
         temperature: float | None = None,
         n: int | None = 1,
@@ -503,6 +504,9 @@ class LLM(llm.LLM):
         # Use user-specific chat history if provided
         if user_id:
             chat_ctx = self.get_chat_history(user_id)
+            if user_transcript:
+                # Update the transcript with the user's name
+                chat_ctx.add_user_message(f"{user_transcript} (from {user_id})")
 
         user = self._opts.user or openai.NOT_GIVEN
         if temperature is None:
